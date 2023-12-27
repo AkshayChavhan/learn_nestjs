@@ -1,10 +1,54 @@
-import { Body, Controller, Get, Param, ParseBoolPipe, ParseIntPipe, Post, Query, Req, Res, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, ParseBoolPipe, ParseIntPipe, Post, Query, Req, Res, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { createNewUser } from 'src/users/dtos/CreateNewUser.dto';
 import { createNewUserWithValidation } from 'src/users/dtos/CreateNewUserWithValidation.dto';
+import { UsersService } from 'src/users/services/users/users.service';
 
 @Controller('users')
 export class UsersController {
+
+    // injecting user services 
+    constructor(private userService: UsersService) { }
+
+    // <-------------- STANDARD PRACTICE TO ADD BUSINESS LOGIC INSIDE SERVICES---------->
+
+    // http://localhost:3001/users/std_getAllUser
+    @Get('/std_getAllUser')
+    getStdAllUser() {
+        return this.userService.fetchUsers();
+    }
+
+
+    // http://localhost:3001/users/validate
+    // {
+    //     "username": "akshay" ,
+    //     "email" : "akshay@rtledgers.com"
+    //   }
+    @Post('std_validate')
+    @UsePipes(new ValidationPipe())
+    createStdNewUserValidate(@Body() userData: createNewUserWithValidation) {
+        return this.userService.createUsers(userData);
+    }
+
+
+    // http://localhost:3001/users/123 
+    // http://localhost:3001/users/akshay  errror:-alidation failed (numeric string is expected)
+    @Get('/:id')
+    getStdMyUserById(@Param('id', ParseIntPipe) id: number) {
+        const user = this.userService.fetchUserById(id);
+        // validation for null values
+        // if(!user){
+        //     throw new HttpException('User not found' , HttpStatus.BAD_REQUEST);
+        // }
+        return user;
+    }
+
+
+
+
+
+
+    // <------------- adding bussiness logic in controller is not standard practice --------------------------->
 
     // http://localhost:3001/users
     @Get()
@@ -26,9 +70,9 @@ export class UsersController {
     // for query params
     // http://localhost:3001/users/validatequeryparams?sortDesc=ascending   error:=> Validation failed (boolean string is expected)
     // http://localhost:3001/users/validatequeryparams?sortDesc=true 
-    
+
     @Get('validatequeryparams')
-    getUserWithValidatingQuery(@Query('sortDesc' , ParseBoolPipe) sortDesc: boolean) {
+    getUserWithValidatingQuery(@Query('sortDesc', ParseBoolPipe) sortDesc: boolean) {
         console.log(sortDesc);
         return [{ query: sortDesc }]
     }
@@ -72,11 +116,11 @@ export class UsersController {
     // here is validation to expect only number in param as id
     // http://localhost:3001/users/123 
     // http://localhost:3001/users/akshay  errror:-alidation failed (numeric string is expected)
-    @Get('/:id')
-    getMyUserById(@Param('id', ParseIntPipe) id: number) {
-        console.log(id)
-        return { id: id }
-    }
+    // @Get('/:id')
+    // getMyUserById(@Param('id', ParseIntPipe) id: number) {
+    //     console.log(id)
+    //     return { id: id }
+    // }
 
 
     // http://localhost:3001/users/
@@ -117,6 +161,8 @@ export class UsersController {
         console.log(userData);
         return {}
     }
+
+
 
 
 }
