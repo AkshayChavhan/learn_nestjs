@@ -4,6 +4,7 @@ import { createNewUser } from 'src/users/dtos/CreateNewUser.dto';
 import { createNewUserWithValidation } from 'src/users/dtos/CreateNewUserWithValidation.dto';
 import { UsersService } from 'src/users/services/users/users.service';
 import { createPipeNewUser } from 'src/users/dtos/createPipeNewUser';
+import { ValidateCreateUserPipe } from 'src/users/pipes/validate-create-user/validate-create-user.pipe';
 
 @Controller('users')
 export class UsersController {
@@ -173,14 +174,25 @@ export class UsersController {
     //     "email":"akshyachahvha@gmail.com",
     //     "age":24
     //   }
+
+
+    // To Test ValidateCreateUserPipe
+    // http://localhost:3001/users/createPipeUser
+    // method : POST
+    // {
+    //     "username": "akshyachavhan",
+    //     "email":"akshyachahvha@gmail.com",
+    //     "age":"24A"
+    //   }
+    // Error
+    // {
+    //     "statusCode": 400,
+    //     "message": "Invalid datatype for the property age.Expected number"
+    //   }
+
     @Post('/createPipeUser')
-    @UsePipes(new ValidationPipe())
+    @UsePipes(new ValidateCreateUserPipe())
     createPipeUser(@Body() userData: createPipeNewUser) {
         console.log(userData);
     }
-
-
-
-
-
 }
