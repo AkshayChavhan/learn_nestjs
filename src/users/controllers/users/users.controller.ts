@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { createNewUser } from 'src/users/dtos/CreateNewUser.dto';
 import { createNewUserWithValidation } from 'src/users/dtos/CreateNewUserWithValidation.dto';
 import { UsersService } from 'src/users/services/users/users.service';
+import { createPipeNewUser } from 'src/users/dtos/createPipeNewUser';
 
 @Controller('users')
 export class UsersController {
@@ -161,6 +162,23 @@ export class UsersController {
         console.log(userData);
         return {}
     }
+
+
+    // For Pipes
+    // To test it
+    // http://localhost:3001/users/createPipeUser
+    // method : POST
+    // {
+    //     "username": "akshyachavhan",
+    //     "email":"akshyachahvha@gmail.com",
+    //     "age":24
+    //   }
+    @Post('/createPipeUser')
+    @UsePipes(new ValidationPipe())
+    createPipeUser(@Body() userData: createPipeNewUser) {
+        console.log(userData);
+    }
+
 
 
 
