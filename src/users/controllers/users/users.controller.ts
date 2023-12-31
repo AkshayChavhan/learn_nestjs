@@ -1,12 +1,14 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, ParseBoolPipe, ParseIntPipe, Post, Query, Req, Res, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, ParseBoolPipe, ParseIntPipe, Post, Query, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { createNewUser } from 'src/users/dtos/CreateNewUser.dto';
 import { createNewUserWithValidation } from 'src/users/dtos/CreateNewUserWithValidation.dto';
 import { UsersService } from 'src/users/services/users/users.service';
 import { createPipeNewUser } from 'src/users/dtos/createPipeNewUser';
 import { ValidateCreateUserPipe } from 'src/users/pipes/validate-create-user/validate-create-user.pipe';
+import { AuthGuard } from 'src/users/guards/auth/auth.guard';
 
 @Controller('users')
+// @UseGuards(AuthGuard)  //this will guard all "/users" routes
 export class UsersController {
 
     // injecting user services 
@@ -54,6 +56,10 @@ export class UsersController {
 
     // http://localhost:3001/users
     @Get()
+    // to test guard
+    // http://localhost:3001/users
+    // Method : Get
+    @UseGuards(AuthGuard)  //this will guard all "/users/" routes
     getUser() {
         return [{ username: "akshay", email: "akshaychavhan676@gmail.com" }]
     }

@@ -1,3 +1,5 @@
+REFER TUT:- https://www.youtube.com/watch?v=xzu3QXwo1BU
+
 Introduction
 Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications. It uses progressive JavaScript, is built with and fully supports TypeScript (yet still enables developers to code in pure JavaScript) and combines elements of OOP (Object Oriented Programming), FP (Functional Programming), and FRP (Functional Reactive Programming).
 
@@ -165,3 +167,10 @@ To see schematic collections:-
 $ nest g -h
 
 $ nest g pipe /users/pipes/ValidateCreateUser
+
+
+
+## GUARDS
+
+To create a guard
+$ nest g guard /users/guards/Auth
